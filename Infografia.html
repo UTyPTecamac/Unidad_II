@@ -1,0 +1,1996 @@
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografía HA - Proxmox VE Timeline</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #1f2937;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .main-header {
+            text-align: center;
+            margin-bottom: 4rem;
+            background: linear-gradient(145deg, #ffffff, #f0f4f8);
+            padding: 3rem;
+            border-radius: 25px;
+            box-shadow: 
+                20px 20px 40px rgba(0,0,0,0.15),
+                -20px -20px 40px rgba(255,255,255,0.9),
+                inset 5px 5px 10px rgba(0,0,0,0.05),
+                inset -5px -5px 10px rgba(255,255,255,0.8);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .main-title {
+            font-size: 4rem;
+            font-weight: 700;
+            color: #2563eb;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            line-height: 1.2;
+        }
+
+        .main-subtitle {
+            font-size: 2rem;
+            color: #6b7280;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            line-height: 1.4;
+        }
+
+        .main-description {
+            font-size: 1.4rem;
+            color: #4b5563;
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: justify;
+            line-height: 1.7;
+        }
+
+        /* Timeline Styles */
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 6px;
+            background: linear-gradient(to bottom, #3b82f6, #1d4ed8, #7c3aed, #059669);
+            transform: translateX(-50%);
+            border-radius: 3px;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 4rem;
+            width: 100%;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-left: 0;
+            margin-right: 52%;
+            text-align: right;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-left: 52%;
+            margin-right: 0;
+            text-align: left;
+        }
+
+        .timeline-content {
+            background: linear-gradient(145deg, #ffffff, #f0f4f8);
+            border-radius: 25px;
+            padding: 2.5rem;
+            box-shadow: 
+                20px 20px 40px rgba(0,0,0,0.15),
+                -20px -20px 40px rgba(255,255,255,0.9),
+                inset 5px 5px 10px rgba(0,0,0,0.05),
+                inset -5px -5px 10px rgba(255,255,255,0.8);
+            border: 1px solid rgba(255,255,255,0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 
+                25px 25px 50px rgba(0,0,0,0.2),
+                -25px -25px 50px rgba(255,255,255,1),
+                inset 8px 8px 15px rgba(0,0,0,0.08),
+                inset -8px -8px 15px rgba(255,255,255,0.9);
+        }
+
+        /* Timeline Dots */
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #3b82f6, #1d4ed8);
+            border: 4px solid #ffffff;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.6);
+            z-index: 10;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .timeline-item:nth-child(2) .timeline-dot {
+            background: linear-gradient(145deg, #10b981, #059669);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
+        }
+
+        .timeline-item:nth-child(3) .timeline-dot {
+            background: linear-gradient(145deg, #7c3aed, #5b21b6);
+            box-shadow: 0 0 20px rgba(124, 58, 237, 0.6);
+        }
+
+        /* Timeline Arrows */
+        .timeline-item:nth-child(odd) .timeline-content::after {
+            content: '';
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: 15px solid transparent;
+            border-left-color: rgba(255,255,255,0.9);
+        }
+
+        .timeline-item:nth-child(even) .timeline-content::after {
+            content: '';
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: 15px solid transparent;
+            border-right-color: rgba(255,255,255,0.9);
+        }
+
+        .module-title {
+            font-size: 2.8rem;
+            font-weight: 600;
+            color: #2563eb;
+            margin-bottom: 2rem;
+            line-height: 1.3;
+        }
+
+        .timeline-item:nth-child(2) .module-title {
+            color: #10b981;
+        }
+
+        .timeline-item:nth-child(3) .module-title {
+            color: #7c3aed;
+        }
+
+        .svg-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 2rem 0;
+        }
+
+        .static-text {
+            font-size: 1.4rem;
+            color: #4b5563;
+            margin: 2rem 0;
+            font-style: italic;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        /* Conceptos Clave Styles */
+        .concepts-section {
+            margin-top: 2rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, 
+                rgba(59, 130, 246, 0.02) 0%, 
+                rgba(16, 185, 129, 0.02) 50%, 
+                rgba(251, 191, 36, 0.02) 100%);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .concepts-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #374151;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .concepts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.2rem;
+            justify-items: center;
+            align-items: stretch;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .concept-tag {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid transparent;
+            width: 100%;
+            min-height: 50px;
+            text-align: center;
+            white-space: nowrap;
+            overflow: visible;
+            text-overflow: ellipsis;
+        }
+
+        .concept-tag:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        /* Audio Context for Hover Sounds */
+        .concept-tag {
+            cursor: pointer;
+        }
+
+        /* Colores para diferentes conceptos */
+        .concept-blue {
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            color: #1e40af;
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .concept-blue:hover {
+            background: linear-gradient(135deg, #bfdbfe, #93c5fd);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+        }
+
+        .concept-green {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            color: #065f46;
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .concept-green:hover {
+            background: linear-gradient(135deg, #a7f3d0, #6ee7b7);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+        }
+
+        .concept-purple {
+            background: linear-gradient(135deg, #ede9fe, #ddd6fe);
+            color: #581c87;
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+
+        .concept-purple:hover {
+            background: linear-gradient(135deg, #ddd6fe, #c4b5fd);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
+        }
+
+        .concept-orange {
+            background: linear-gradient(135deg, #fed7aa, #fdba74);
+            color: #9a3412;
+            border-color: rgba(251, 146, 60, 0.3);
+        }
+
+        .concept-orange:hover {
+            background: linear-gradient(135deg, #fdba74, #fb923c);
+            box-shadow: 0 8px 25px rgba(251, 146, 60, 0.3);
+        }
+
+        .concept-teal {
+            background: linear-gradient(135deg, #ccfbf1, #99f6e4);
+            color: #134e4a;
+            border-color: rgba(20, 184, 166, 0.3);
+        }
+
+        .concept-teal:hover {
+            background: linear-gradient(135deg, #99f6e4, #5eead4);
+            box-shadow: 0 8px 25px rgba(20, 184, 166, 0.3);
+        }
+
+        .concept-red {
+            background: linear-gradient(135deg, #fecaca, #fca5a5);
+            color: #991b1b;
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .concept-red:hover {
+            background: linear-gradient(135deg, #fca5a5, #f87171);
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
+        }
+
+        .concept-gray {
+            background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+            color: #374151;
+            border-color: rgba(107, 114, 128, 0.3);
+        }
+
+        .concept-gray:hover {
+            background: linear-gradient(135deg, #e5e7eb, #d1d5db);
+            box-shadow: 0 8px 25px rgba(107, 114, 128, 0.3);
+        }
+
+        .concept-pink {
+            background: linear-gradient(135deg, #fce7f3, #fbcfe8);
+            color: #be185d;
+            border-color: rgba(236, 72, 153, 0.3);
+        }
+
+        .concept-pink:hover {
+            background: linear-gradient(135deg, #fbcfe8, #f9a8d4);
+            box-shadow: 0 8px 25px rgba(236, 72, 153, 0.3);
+        }
+
+        .tooltip {
+            position: absolute;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(145deg, #ffffff, #f8fafc);
+            border: 2px solid rgba(59, 130, 246, 0.2);
+            border-radius: 20px;
+            padding: 1.2rem;
+            box-shadow: 
+                0 25px 50px rgba(0,0,0,0.15),
+                0 10px 25px rgba(59, 130, 246, 0.1),
+                inset 0 1px 0 rgba(255,255,255,0.9),
+                inset 0 -1px 0 rgba(0,0,0,0.05);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            width: 280px;
+            max-width: 85vw;
+            min-width: 200px;
+            font-size: 0.9rem;
+            color: #1f2937;
+            font-weight: 500;
+            line-height: 1.4;
+            backdrop-filter: blur(15px);
+            background-image: linear-gradient(145deg, 
+                rgba(255,255,255,0.95) 0%, 
+                rgba(248,250,252,0.9) 100%);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            word-break: break-word;
+            hyphens: auto;
+            text-align: left;
+            white-space: normal;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 12px solid transparent;
+            border-top-color: rgba(59, 130, 246, 0.2);
+        }
+
+        .tooltip::before {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 10px solid transparent;
+            border-top-color: #ffffff;
+            z-index: 1;
+        }
+
+        .concept-tag:hover .tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(-10px) scale(1.02);
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0%, 100% { 
+                transform: translate(-50%, -50%) scale(1);
+                box-shadow: 0 0 20px rgba(59, 130, 246, 0.6);
+            }
+            50% { 
+                transform: translate(-50%, -50%) scale(1.1);
+                box-shadow: 0 0 30px rgba(59, 130, 246, 0.8);
+            }
+        }
+
+        .ha-shield {
+            animation: rotateShield 12s linear infinite;
+            filter: drop-shadow(0 8px 20px rgba(37, 99, 235, 0.4));
+        }
+
+        .gear {
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+        }
+
+        .gear-1 {
+            animation: rotateClockwise 6s linear infinite;
+        }
+
+        .gear-2 {
+            animation: rotateCounterClockwise 7s linear infinite;
+        }
+
+        .gear-3 {
+            animation: rotateClockwise 5s linear infinite;
+        }
+
+        .energy-ring-1 {
+            animation: energyPulse 2s ease-in-out infinite;
+        }
+
+        .energy-ring-2 {
+            animation: energyPulse 2.5s ease-in-out infinite 0.3s;
+        }
+
+        .energy-ring-3 {
+            animation: energyPulse 3s ease-in-out infinite 0.6s;
+        }
+
+        .shield-glow {
+            animation: glowPulse 1.5s ease-in-out infinite alternate;
+        }
+
+        .energy-circle {
+            animation: energyFlow 2s ease-in-out infinite;
+        }
+
+        .rotating-arrow {
+            animation: arrowFlow 3s linear infinite;
+        }
+
+        .rotating-arrow-reverse {
+            animation: arrowFlowReverse 2.5s linear infinite;
+        }
+
+        .ha-text {
+            animation: textGlow 2s ease-in-out infinite alternate;
+        }
+
+        .ha-text-glow {
+            animation: textGlowEffect 1.8s ease-in-out infinite alternate;
+        }
+
+        .orbital-particle {
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+        }
+
+        .orbital-1 {
+            animation: orbit1 4s linear infinite;
+        }
+
+        .orbital-2 {
+            animation: orbit2 3s linear infinite;
+        }
+
+        .orbital-3 {
+            animation: orbit3 5s linear infinite;
+        }
+
+        .orbital-4 {
+            animation: orbit4 3.5s linear infinite;
+        }
+
+        .energy-wave {
+            animation: waveExpand 2s ease-out infinite;
+        }
+
+        .energy-wave-2 {
+            animation: waveExpand 2.5s ease-out infinite 0.5s;
+        }
+
+        .inner-core {
+            animation: coreRotate 6s linear infinite;
+        }
+
+        .shield-border {
+            animation: borderPulse 3s ease-in-out infinite;
+        }
+
+        .particle {
+            animation-timing-function: ease-in-out;
+            animation-iteration-count: infinite;
+            animation-direction: alternate;
+        }
+
+        .particle-1 {
+            animation: floatParticle1 4s ease-in-out infinite;
+        }
+
+        .particle-2 {
+            animation: floatParticle2 3s ease-in-out infinite 0.5s;
+        }
+
+        .particle-3 {
+            animation: floatParticle3 5s ease-in-out infinite 1s;
+        }
+
+        .particle-4 {
+            animation: floatParticle4 3.5s ease-in-out infinite 1.5s;
+        }
+
+        /* Animaciones para Proxmox VE */
+        .node-breathing {
+            animation: nodeBreathing 2s ease-in-out infinite;
+        }
+
+        .vm-breathing {
+            animation: vmBreathing 2s ease-in-out infinite 0.3s;
+        }
+
+        .lxc-breathing {
+            animation: lxcBreathing 2s ease-in-out infinite 0.6s;
+        }
+
+        .network-flow {
+            animation: networkFlow 2s linear infinite;
+        }
+
+        .connection-flow {
+            animation: connectionFlow 1.8s linear infinite;
+        }
+
+        .data-pulse {
+            animation: dataPulse 2s ease-in-out infinite;
+        }
+
+        .data-pulse-2 {
+            animation: dataPulse 2s ease-in-out infinite 0.5s;
+        }
+
+        .vm-gentle {
+            animation: vmGentle 3s ease-in-out infinite;
+        }
+
+        .vm-core {
+            animation: vmGentle 3s ease-in-out infinite 0.2s;
+        }
+
+        .vm-indicator {
+            animation: dataPulse 2.5s ease-in-out infinite;
+        }
+
+        .lxc-gentle {
+            animation: lxcGentle 3.5s ease-in-out infinite;
+        }
+
+        .lxc-line {
+            animation: lxcGentle 3.5s ease-in-out infinite 0.1s;
+        }
+
+        .lxc-indicator {
+            animation: dataPulse 2.2s ease-in-out infinite 0.3s;
+        }
+
+        .storage-glow {
+            animation: storageGlow 4s ease-in-out infinite;
+        }
+
+        /* Animaciones para Corosync y Pacemaker */
+        .heartbeat-wave {
+            animation: heartbeatWave 2s ease-in-out infinite;
+        }
+
+        .heart-pulse {
+            animation: heartPulse 2s ease-in-out infinite;
+        }
+
+        .brain-glow {
+            animation: brainGlow 3s ease-in-out infinite;
+        }
+
+        .control-flash {
+            animation: controlFlash 1s ease-in-out infinite;
+        }
+
+        /* Animaciones para iconos de conceptos */
+        .icon-rotate {
+            animation: iconRotate 4s linear infinite;
+        }
+
+        .icon-pulse {
+            animation: iconPulse 2s ease-in-out infinite;
+        }
+
+        .icon-bounce {
+            animation: iconBounce 2s ease-in-out infinite;
+        }
+
+        .icon-glow {
+            animation: iconGlow 3s ease-in-out infinite alternate;
+        }
+
+        .icon-float {
+            animation: iconFloat 3s ease-in-out infinite;
+        }
+
+        .icon-spin {
+            animation: iconSpin 6s linear infinite;
+        }
+
+        @keyframes rotateShield {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes rotateClockwise {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes rotateCounterClockwise {
+            from { transform: rotate(360deg); }
+            to { transform: rotate(0deg); }
+        }
+
+        @keyframes energyPulse {
+            0%, 100% { 
+                opacity: 0.1; 
+                stroke-width: 1;
+                transform: scale(1);
+            }
+            50% { 
+                opacity: 0.6; 
+                stroke-width: 3;
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes glowPulse {
+            0% { 
+                opacity: 0.1; 
+                transform: scale(1);
+            }
+            100% { 
+                opacity: 0.4; 
+                transform: scale(1.1);
+            }
+        }
+
+        @keyframes energyFlow {
+            0%, 100% { 
+                stroke-width: 3;
+                opacity: 0.8;
+            }
+            50% { 
+                stroke-width: 6;
+                opacity: 1;
+            }
+        }
+
+        @keyframes arrowFlow {
+            0% { 
+                stroke-dasharray: 0 251;
+                opacity: 0.7;
+            }
+            50% { 
+                stroke-dasharray: 125 126;
+                opacity: 1;
+            }
+            100% { 
+                stroke-dasharray: 251 0;
+                opacity: 0.7;
+            }
+        }
+
+        @keyframes arrowFlowReverse {
+            0% { 
+                stroke-dasharray: 251 0;
+                opacity: 0.6;
+            }
+            50% { 
+                stroke-dasharray: 125 126;
+                opacity: 0.9;
+            }
+            100% { 
+                stroke-dasharray: 0 251;
+                opacity: 0.6;
+            }
+        }
+
+        @keyframes orbit1 {
+            from { transform: rotate(0deg) translateX(60px) rotate(0deg); }
+            to { transform: rotate(360deg) translateX(60px) rotate(-360deg); }
+        }
+
+        @keyframes orbit2 {
+            from { transform: rotate(0deg) translateX(75px) rotate(0deg); }
+            to { transform: rotate(-360deg) translateX(75px) rotate(360deg); }
+        }
+
+        @keyframes orbit3 {
+            from { transform: rotate(0deg) translateX(90px) rotate(0deg); }
+            to { transform: rotate(360deg) translateX(90px) rotate(-360deg); }
+        }
+
+        @keyframes orbit4 {
+            from { transform: rotate(0deg) translateX(105px) rotate(0deg); }
+            to { transform: rotate(-360deg) translateX(105px) rotate(360deg); }
+        }
+
+        @keyframes waveExpand {
+            0% { 
+                r: 50;
+                opacity: 0.8;
+                stroke-width: 4;
+            }
+            50% { 
+                r: 80;
+                opacity: 0.4;
+                stroke-width: 2;
+            }
+            100% { 
+                r: 120;
+                opacity: 0;
+                stroke-width: 0.5;
+            }
+        }
+
+        @keyframes coreRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes borderPulse {
+            0%, 100% { 
+                stroke-width: 3;
+                opacity: 0.8;
+            }
+            50% { 
+                stroke-width: 6;
+                opacity: 1;
+            }
+        }
+
+        @keyframes textGlow {
+            0% { 
+                filter: drop-shadow(0 0 5px rgba(255,255,255,0.5));
+            }
+            100% { 
+                filter: drop-shadow(0 0 15px rgba(255,255,255,1));
+            }
+        }
+
+        @keyframes textGlowEffect {
+            0% { 
+                opacity: 0.3;
+                transform: scale(1);
+            }
+            100% { 
+                opacity: 0.8;
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes floatParticle1 {
+            0% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+            100% { transform: translate(-10px, -15px) scale(1.3); opacity: 1; }
+        }
+
+        @keyframes floatParticle2 {
+            0% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+            100% { transform: translate(15px, -20px) scale(1.5); opacity: 0.9; }
+        }
+
+        @keyframes floatParticle3 {
+            0% { transform: translate(0, 0) scale(1); opacity: 0.7; }
+            100% { transform: translate(-20px, 10px) scale(1.2); opacity: 1; }
+        }
+
+        @keyframes floatParticle4 {
+            0% { transform: translate(0, 0) scale(1); opacity: 0.4; }
+            100% { transform: translate(25px, -10px) scale(1.4); opacity: 0.8; }
+        }
+
+        @keyframes nodeBreathing {
+            0%, 100% { 
+                transform: scale(1);
+                opacity: 0.9;
+            }
+            50% { 
+                transform: scale(1.02);
+                opacity: 1;
+            }
+        }
+
+        @keyframes vmBreathing {
+            0%, 100% { 
+                transform: scale(1);
+                opacity: 0.8;
+            }
+            50% { 
+                transform: scale(1.1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes lxcBreathing {
+            0%, 100% { 
+                transform: scale(1);
+                opacity: 0.8;
+            }
+            50% { 
+                transform: scale(1.1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes networkFlow {
+            0% { 
+                stroke-dashoffset: 0;
+                opacity: 0.7;
+            }
+            100% { 
+                stroke-dashoffset: -24;
+                opacity: 1;
+            }
+        }
+
+        @keyframes connectionFlow {
+            0% { 
+                stroke-dashoffset: 0;
+                opacity: 0.6;
+            }
+            100% { 
+                stroke-dashoffset: -18;
+                opacity: 0.9;
+            }
+        }
+
+        @keyframes dataPulse {
+            0%, 100% { 
+                opacity: 0.4;
+                transform: scale(0.8);
+            }
+            50% { 
+                opacity: 1;
+                transform: scale(1.3);
+            }
+        }
+
+        @keyframes vmGentle {
+            0%, 100% { 
+                opacity: 0.8;
+                transform: scale(1);
+            }
+            50% { 
+                opacity: 1;
+                transform: scale(1.02);
+            }
+        }
+
+        @keyframes lxcGentle {
+            0%, 100% { 
+                opacity: 0.7;
+                transform: scale(1);
+            }
+            50% { 
+                opacity: 1;
+                transform: scale(1.03);
+            }
+        }
+
+        @keyframes storageGlow {
+            0%, 100% { 
+                opacity: 0.9;
+                filter: url(#nodeGlow) brightness(1);
+            }
+            50% { 
+                opacity: 1;
+                filter: url(#nodeGlow) brightness(1.1);
+            }
+        }
+
+        @keyframes heartbeatWave {
+            0% { 
+                stroke-dasharray: 0 400;
+                opacity: 0.7;
+            }
+            50% { 
+                stroke-dasharray: 200 200;
+                opacity: 1;
+            }
+            100% { 
+                stroke-dasharray: 400 0;
+                opacity: 0.7;
+            }
+        }
+
+        @keyframes heartPulse {
+            0%, 100% { 
+                transform: scale(0.4);
+                opacity: 0.8;
+            }
+            50% { 
+                transform: scale(0.6);
+                opacity: 1;
+            }
+        }
+
+        @keyframes brainGlow {
+            0%, 100% { 
+                filter: url(#brainGlow);
+                opacity: 0.9;
+            }
+            50% { 
+                filter: url(#brainGlow) brightness(1.2);
+                opacity: 1;
+            }
+        }
+
+        @keyframes controlFlash {
+            0%, 100% { 
+                opacity: 0.3;
+            }
+            50% { 
+                opacity: 1;
+            }
+        }
+
+        @keyframes iconRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes iconPulse {
+            0%, 100% { 
+                transform: scale(1);
+                opacity: 0.8;
+            }
+            50% { 
+                transform: scale(1.1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes iconBounce {
+            0%, 100% { 
+                transform: translateY(0);
+            }
+            50% { 
+                transform: translateY(-3px);
+            }
+        }
+
+        @keyframes iconGlow {
+            0% { 
+                filter: drop-shadow(0 0 2px currentColor);
+            }
+            100% { 
+                filter: drop-shadow(0 0 8px currentColor);
+            }
+        }
+
+        @keyframes iconFloat {
+            0%, 100% { 
+                transform: translateY(0) rotate(0deg);
+            }
+            33% { 
+                transform: translateY(-2px) rotate(1deg);
+            }
+            66% { 
+                transform: translateY(1px) rotate(-1deg);
+            }
+        }
+
+        @keyframes iconSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 2.8rem;
+            }
+            
+            .main-subtitle {
+                font-size: 1.5rem;
+            }
+            
+            .main-description {
+                font-size: 1.2rem;
+            }
+            
+            .module-title {
+                font-size: 2rem;
+            }
+            
+            .static-text {
+                font-size: 1.2rem;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .timeline-content {
+                padding: 1.5rem;
+            }
+            
+            .timeline-item:nth-child(odd) .timeline-content,
+            .timeline-item:nth-child(even) .timeline-content {
+                margin-left: 10%;
+                margin-right: 10%;
+                text-align: center;
+            }
+            
+            .timeline::before {
+                left: 30px;
+            }
+            
+            .timeline-dot {
+                left: 30px;
+            }
+            
+            .timeline-item:nth-child(odd) .timeline-content::after,
+            .timeline-item:nth-child(even) .timeline-content::after {
+                display: none;
+            }
+            
+            .tooltip {
+                width: 250px;
+                max-width: 80vw;
+                min-width: 180px;
+                font-size: 0.85rem;
+                padding: 1rem;
+                line-height: 1.3;
+                word-break: break-word;
+                overflow-wrap: break-word;
+            }
+            
+            .concepts-container {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .concept-tag {
+                font-size: 0.9rem;
+                padding: 0.8rem 1rem;
+                min-height: 45px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .concepts-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .concept-tag {
+                font-size: 0.85rem;
+                white-space: normal;
+                line-height: 1.3;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Principal -->
+        <div class="main-header">
+            <h1 class="main-title">Alta Disponibilidad (HA)</h1>
+            <p class="main-subtitle">Infraestructura Resiliente con Proxmox VE</p>
+            <p class="main-description">
+                La Alta Disponibilidad garantiza que servicios críticos —bancos, hospitales, plataformas web— continúen operando ante fallos de hardware, software o red. Arquitectura basada en virtualización distribuida, clustering y replicación automática de datos.
+            </p>
+        </div>
+
+        <!-- Timeline -->
+        <div class="timeline">
+            
+            <!-- Timeline Item 1: Conceptos Fundamentales (Izquierda) -->
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h2 class="module-title">Conceptos Fundamentales</h2>
+                    
+                    <p class="static-text">
+                        Disponibilidad del 99.99% = 52 minutos de inactividad al año
+                    </p>
+                    
+                    <!-- SVG Container con Animaciones -->
+                    <div class="svg-container">
+                        <svg width="400" height="300" viewBox="0 0 400 300">
+                            <!-- Definición de gradientes y efectos -->
+                            <defs>
+                                <linearGradient id="shieldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+                                    <stop offset="50%" style="stop-color:#1d4ed8;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#1e40af;stop-opacity:1" />
+                                </linearGradient>
+                                
+                                <linearGradient id="arrowGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+                                </linearGradient>
+                                
+                                <linearGradient id="glowGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#fbbf24;stop-opacity:0.8" />
+                                    <stop offset="100%" style="stop-color:#f59e0b;stop-opacity:0.4" />
+                                </linearGradient>
+                                
+                                <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                                    <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                                    <feMerge> 
+                                        <feMergeNode in="coloredBlur"/>
+                                        <feMergeNode in="SourceGraphic"/>
+                                    </feMerge>
+                                </filter>
+                                
+                                <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+                                    <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#1e40af" flood-opacity="0.3"/>
+                                </filter>
+                            </defs>
+                            
+                            <!-- Círculos de energía de fondo -->
+                            <circle cx="200" cy="150" r="120" fill="none" stroke="url(#glowGradient)" stroke-width="2" opacity="0.3" class="energy-ring-1"/>
+                            <circle cx="200" cy="150" r="140" fill="none" stroke="url(#glowGradient)" stroke-width="1" opacity="0.2" class="energy-ring-2"/>
+                            <circle cx="200" cy="150" r="160" fill="none" stroke="url(#glowGradient)" stroke-width="0.5" opacity="0.1" class="energy-ring-3"/>
+                            
+                            <!-- Engranajes mejorados -->
+                            <g class="gear gear-1" transform-origin="80 80">
+                                <circle cx="80" cy="80" r="20" fill="url(#shieldGradient)" stroke="#1e40af" stroke-width="2" opacity="0.7"/>
+                                <circle cx="80" cy="60" r="4" fill="#fbbf24" stroke="#f59e0b" stroke-width="1"/>
+                                <circle cx="100" cy="80" r="4" fill="#fbbf24" stroke="#f59e0b" stroke-width="1"/>
+                                <circle cx="80" cy="100" r="4" fill="#fbbf24" stroke="#f59e0b" stroke-width="1"/>
+                                <circle cx="60" cy="80" r="4" fill="#fbbf24" stroke="#f59e0b" stroke-width="1"/>
+                            </g>
+                            
+                            <g class="gear gear-2" transform-origin="320 80">
+                                <circle cx="320" cy="80" r="20" fill="url(#arrowGradient)" stroke="#059669" stroke-width="2" opacity="0.7"/>
+                                <circle cx="320" cy="60" r="4" fill="#fbbf24" stroke="#f59e0b" stroke-width="1"/>
+                                <circle cx="340" cy="80" r="4" fill="#fbbf24" stroke="#f59e0b" stroke-width="1"/>
+                                <circle cx="320" cy="100" r="4" fill="#fbbf24" stroke="#f59e0b" stroke-width="1"/>
+                                <circle cx="300" cy="80" r="4" fill="#fbbf24" stroke="#f59e0b" stroke-width="1"/>
+                            </g>
+                            
+                            <g class="gear gear-3" transform-origin="200 220">
+                                <circle cx="200" cy="220" r="20" fill="url(#glowGradient)" stroke="#f59e0b" stroke-width="2" opacity="0.7"/>
+                                <circle cx="200" cy="200" r="4" fill="#3b82f6" stroke="#1d4ed8" stroke-width="1"/>
+                                <circle cx="220" cy="220" r="4" fill="#3b82f6" stroke="#1d4ed8" stroke-width="1"/>
+                                <circle cx="200" cy="240" r="4" fill="#3b82f6" stroke="#1d4ed8" stroke-width="1"/>
+                                <circle cx="180" cy="220" r="4" fill="#3b82f6" stroke="#1d4ed8" stroke-width="1"/>
+                            </g>
+                            
+                            <!-- Escudo HA Principal -->
+                            <g class="ha-shield" transform-origin="200 150" filter="url(#shadow)">
+                                <circle cx="200" cy="150" r="50" fill="none" stroke="url(#glowGradient)" stroke-width="4" opacity="0.8" class="energy-wave"/>
+                                <circle cx="200" cy="150" r="50" fill="none" stroke="url(#arrowGradient)" stroke-width="2" opacity="0.6" class="energy-wave-2"/>
+                                <circle cx="200" cy="150" r="70" fill="url(#glowGradient)" opacity="0.3" class="shield-glow"/>
+                                <circle cx="200" cy="150" r="55" fill="url(#shieldGradient)" stroke="#1e40af" stroke-width="4" filter="url(#glow)" class="shield-border"/>
+                                <circle cx="200" cy="150" r="48" fill="none" stroke="#60a5fa" stroke-width="3" opacity="0.8"/>
+                                
+                                <g class="inner-core" transform-origin="200 150">
+                                    <circle cx="200" cy="150" r="35" fill="none" stroke="url(#arrowGradient)" stroke-width="2" opacity="0.6"/>
+                                    <circle cx="200" cy="150" r="25" fill="none" stroke="url(#glowGradient)" stroke-width="1" opacity="0.8"/>
+                                </g>
+                                
+                                <circle cx="200" cy="150" r="40" fill="none" stroke="url(#arrowGradient)" stroke-width="5" class="energy-circle"/>
+                                <circle cx="200" cy="150" r="32" fill="none" stroke="url(#arrowGradient)" stroke-width="6" stroke-dasharray="50 50" class="rotating-arrow"/>
+                                <circle cx="200" cy="150" r="28" fill="none" stroke="url(#glowGradient)" stroke-width="4" stroke-dasharray="40 40" class="rotating-arrow-reverse"/>
+                                
+                                <!-- Partículas orbitales -->
+                                <g transform-origin="200 150">
+                                    <g class="orbital-particle orbital-1" transform-origin="200 150">
+                                        <circle cx="260" cy="150" r="3" fill="#fbbf24"/>
+                                    </g>
+                                    <g class="orbital-particle orbital-2" transform-origin="200 150">
+                                        <circle cx="275" cy="150" r="2" fill="#10b981"/>
+                                    </g>
+                                    <g class="orbital-particle orbital-3" transform-origin="200 150">
+                                        <circle cx="290" cy="150" r="2.5" fill="#3b82f6"/>
+                                    </g>
+                                    <g class="orbital-particle orbital-4" transform-origin="200 150">
+                                        <circle cx="305" cy="150" r="1.5" fill="#f59e0b"/>
+                                    </g>
+                                </g>
+                                
+                                <text x="200" y="160" text-anchor="middle" font-family="Inter" font-size="32" font-weight="900" fill="white" class="ha-text">HA</text>
+                                <text x="200" y="160" text-anchor="middle" font-family="Inter" font-size="32" font-weight="900" fill="url(#glowGradient)" opacity="0.6" class="ha-text-glow">HA</text>
+                            </g>
+                            
+
+                        </svg>
+                    </div>
+                    
+                    <!-- Conceptos Clave -->
+                    <div class="concepts-section">
+                        <h3 class="concepts-title">Conceptos Clave</h3>
+                        <div class="concepts-container">
+                            <div class="concept-tag concept-blue">
+                                <svg width="20" height="20" viewBox="0 0 24 24" class="icon-rotate">
+                                    <circle cx="8" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="2"/>
+                                    <circle cx="16" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="2"/>
+                                    <circle cx="12" cy="16" r="3" fill="none" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M8 11l4 2" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M16 11l-4 2" stroke="currentColor" stroke-width="2"/>
+                                </svg>
+                                <span>Clustering</span>
+                                <div class="tooltip">
+                                    Múltiples servidores físicos trabajando como una unidad lógica. Si un nodo falla, los servicios migran automáticamente a nodos disponibles.
+                                </div>
+                            </div>
+                            
+                            <div class="concept-tag concept-green">
+                                <svg width="20" height="20" viewBox="0 0 24 24" class="icon-bounce">
+                                    <path d="M12 2L2 7v10c0 5.55 3.84 9.74 9 11 5.16-1.26 9-5.45 9-11V7l-10-5z" fill="none" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2" fill="none"/>
+                                </svg>
+                                <span>Failover Automático</span>
+                                <div class="tooltip">
+                                    Proceso que detecta fallos y transfiere servicios a sistemas de respaldo en segundos, sin intervención manual.
+                                </div>
+                            </div>
+                            
+                            <div class="concept-tag concept-purple">
+                                <svg width="20" height="20" viewBox="0 0 24 24" class="icon-pulse">
+                                    <rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M7 8h10M7 12h10M7 16h6" stroke="currentColor" stroke-width="2"/>
+                                    <circle cx="19" cy="19" r="2" fill="currentColor"/>
+                                    <path d="M17 17l4 4" stroke="currentColor" stroke-width="2"/>
+                                </svg>
+                                <span>Replicación Síncrona</span>
+                                <div class="tooltip">
+                                    Los datos se escriben simultáneamente en múltiples ubicaciones. Garantiza cero pérdida de datos (RPO=0).
+                                </div>
+                            </div>
+                            
+                            <div class="concept-tag concept-orange">
+                                <svg width="20" height="20" viewBox="0 0 24 24" class="icon-glow">
+                                    <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2"/>
+                                    <circle cx="12" cy="12" r="2" fill="currentColor"/>
+                                </svg>
+                                <span>Quorum</span>
+                                <div class="tooltip">
+                                    Mecanismo que previene "split-brain": requiere mayoría de nodos activos para tomar decisiones críticas del cluster.
+                                </div>
+                            </div>
+                            
+                            <div class="concept-tag concept-teal">
+                                <svg width="20" height="20" viewBox="0 0 24 24" class="icon-float">
+                                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" fill="none" stroke="currentColor" stroke-width="2"/>
+                                    <polyline points="7.5,4.21 12,6.81 16.5,4.21" stroke="currentColor" stroke-width="2" fill="none"/>
+                                    <polyline points="7.5,19.79 7.5,14.6 3,12" stroke="currentColor" stroke-width="2" fill="none"/>
+                                    <polyline points="21,12 16.5,14.6 16.5,19.79" stroke="currentColor" stroke-width="2" fill="none"/>
+                                    <polyline points="12,22.81 12,17" stroke="currentColor" stroke-width="2" fill="none"/>
+                                    <line x1="12" y1="6.81" x2="12" y2="12" stroke="currentColor" stroke-width="2"/>
+                                </svg>
+                                <span>Live Migration</span>
+                                <div class="tooltip">
+                                    Transferencia de máquinas virtuales entre hosts sin interrumpir servicios. Permite mantenimiento sin downtime.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline Item 2: Proxmox VE (Derecha) -->
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h2 class="module-title">Proxmox VE: Infraestructura Virtualizada y Resiliente</h2>
+                    
+                    <p class="static-text">
+                        Proxmox Virtual Environment (basado en Debian) combina KVM (máquinas virtuales) y LXC (contenedores) en un clúster gestionado centralmente. Soporta HA nativo con almacenamiento compartido, sin costos adicionales de licencia.
+                    </p>
+                    
+                    <!-- SVG Arquitectura del Clúster -->
+                    <div class="svg-container">
+                        <svg width="600" height="420" viewBox="0 0 600 420">
+                            <!-- Definición de gradientes y efectos -->
+                            <defs>
+                                <linearGradient id="nodeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#1d4ed8;stop-opacity:1" />
+                                </linearGradient>
+                                
+                                <linearGradient id="storageGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+                                </linearGradient>
+                                
+                                <filter id="nodeGlow" x="-50%" y="-50%" width="200%" height="200%">
+                                    <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                                    <feMerge> 
+                                        <feMergeNode in="coloredBlur"/>
+                                        <feMergeNode in="SourceGraphic"/>
+                                    </feMerge>
+                                </filter>
+                            </defs>
+                            
+                            <!-- Nodo Proxmox 1 -->
+                            <g class="proxmox-node">
+                                <rect x="120" y="60" width="120" height="180" rx="10" ry="10" 
+                                      fill="url(#nodeGradient)" stroke="#2563eb" stroke-width="3" 
+                                      filter="url(#nodeGlow)" class="node-breathing"/>
+                                <text x="180" y="50" text-anchor="middle" font-size="16" font-weight="600" fill="#2563eb">Nodo Proxmox 1</text>
+                                
+                                <!-- VM Icon con animación suave -->
+                                <rect x="140" y="100" width="25" height="25" rx="3" ry="3" 
+                                      fill="rgba(30,64,175,0.2)" stroke="#1e40af" stroke-width="2" class="vm-gentle"/>
+                                <circle cx="152" cy="112" r="8" fill="none" stroke="#1e40af" stroke-width="2" class="vm-core"/>
+                                <circle cx="152" cy="112" r="4" fill="#3b82f6" opacity="0.6" class="vm-indicator"/>
+                                <text x="180" y="118" font-size="14" fill="white" font-weight="500">VM</text>
+                                
+                                <!-- LXC Icon con animación suave -->
+                                <rect x="140" y="150" width="25" height="25" rx="3" ry="3" 
+                                      fill="rgba(107,114,128,0.2)" stroke="#6b7280" stroke-width="2" class="lxc-gentle"/>
+                                <line x1="145" y1="155" x2="160" y2="155" stroke="#6b7280" stroke-width="1.5" class="lxc-line"/>
+                                <line x1="145" y1="162" x2="160" y2="162" stroke="#6b7280" stroke-width="1.5" class="lxc-line"/>
+                                <line x1="145" y1="169" x2="160" y2="169" stroke="#6b7280" stroke-width="1.5" class="lxc-line"/>
+                                <circle cx="168" cy="162" r="3" fill="#10b981" opacity="0.7" class="lxc-indicator"/>
+                                <text x="180" y="168" font-size="14" fill="white" font-weight="500">LXC</text>
+                            </g>
+                            
+                            <!-- Nodo Proxmox 2 -->
+                            <g class="proxmox-node">
+                                <rect x="360" y="60" width="120" height="180" rx="10" ry="10" 
+                                      fill="url(#nodeGradient)" stroke="#2563eb" stroke-width="3" 
+                                      filter="url(#nodeGlow)" class="node-breathing"/>
+                                <text x="420" y="50" text-anchor="middle" font-size="16" font-weight="600" fill="#2563eb">Nodo Proxmox 2</text>
+                                
+                                <!-- VM Icon con animación suave -->
+                                <rect x="380" y="100" width="25" height="25" rx="3" ry="3" 
+                                      fill="rgba(30,64,175,0.2)" stroke="#1e40af" stroke-width="2" class="vm-gentle"/>
+                                <circle cx="392" cy="112" r="8" fill="none" stroke="#1e40af" stroke-width="2" class="vm-core"/>
+                                <circle cx="392" cy="112" r="4" fill="#3b82f6" opacity="0.6" class="vm-indicator"/>
+                                <text x="420" y="118" font-size="14" fill="white" font-weight="500">VM</text>
+                                
+                                <!-- LXC Icon con animación suave -->
+                                <rect x="380" y="150" width="25" height="25" rx="3" ry="3" 
+                                      fill="rgba(107,114,128,0.2)" stroke="#6b7280" stroke-width="2" class="lxc-gentle"/>
+                                <line x1="385" y1="155" x2="400" y2="155" stroke="#6b7280" stroke-width="1.5" class="lxc-line"/>
+                                <line x1="385" y1="162" x2="400" y2="162" stroke="#6b7280" stroke-width="1.5" class="lxc-line"/>
+                                <line x1="385" y1="169" x2="400" y2="169" stroke="#6b7280" stroke-width="1.5" class="lxc-line"/>
+                                <circle cx="408" cy="162" r="3" fill="#10b981" opacity="0.7" class="lxc-indicator"/>
+                                <text x="420" y="168" font-size="14" fill="white" font-weight="500">LXC</text>
+                            </g>
+                            
+                            <!-- Conexión de red con líneas punteadas -->
+                            <line x1="240" y1="150" x2="360" y2="150" 
+                                  stroke="#60a5fa" stroke-width="4" 
+                                  stroke-dasharray="10 8" class="connection-flow"/>
+                            
+                            <!-- Indicadores de flujo de datos -->
+                            <circle cx="270" cy="150" r="4" fill="#3b82f6" opacity="0.8" class="data-pulse"/>
+                            <circle cx="300" cy="150" r="3.5" fill="#60a5fa" opacity="0.6" class="data-pulse-2"/>
+                            <circle cx="330" cy="150" r="4" fill="#3b82f6" opacity="0.8" class="data-pulse"/>
+                            
+                            <!-- Almacenamiento compartido mejorado -->
+                            <g class="shared-storage">
+                                <rect x="220" y="300" width="160" height="80" rx="15" ry="15" 
+                                      fill="url(#storageGradient)" stroke="#059669" stroke-width="4" 
+                                      filter="url(#nodeGlow)" class="storage-glow"/>
+                                <rect x="228" y="308" width="144" height="64" rx="10" ry="10" 
+                                      fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+                                <text x="300" y="330" text-anchor="middle" font-size="16" font-weight="700" fill="white">Almacenamiento</text>
+                                <text x="300" y="350" text-anchor="middle" font-size="14" font-weight="500" fill="rgba(255,255,255,0.9)">Compartido</text>
+                                <text x="300" y="365" text-anchor="middle" font-size="12" fill="rgba(255,255,255,0.7)">(Ceph/NFS/iSCSI)</text>
+                            </g>
+                            
+                            <!-- Conexiones punteadas al almacenamiento -->
+                            <g class="storage-connections">
+                                <line x1="180" y1="240" x2="250" y2="310" 
+                                      stroke="#10b981" stroke-width="4" 
+                                      stroke-dasharray="8 6" class="connection-flow"/>
+                                <line x1="420" y1="240" x2="350" y2="310" 
+                                      stroke="#10b981" stroke-width="4" 
+                                      stroke-dasharray="8 6" class="connection-flow"/>
+                                
+                                <!-- Pulsos de datos en las conexiones -->
+                                <circle cx="200" cy="260" r="3" fill="#10b981" opacity="0.7" class="data-pulse"/>
+                                <circle cx="220" cy="280" r="3.5" fill="#34d399" opacity="0.9" class="data-pulse-2"/>
+                                <circle cx="400" cy="260" r="3" fill="#10b981" opacity="0.7" class="data-pulse"/>
+                                <circle cx="380" cy="280" r="3.5" fill="#34d399" opacity="0.9" class="data-pulse-2"/>
+                            </g>
+                        </svg>
+                    </div>
+                    
+                    <!-- Conceptos Clave -->
+                    <div class="concepts-section">
+                        <h3 class="concepts-title">Conceptos Clave</h3>
+                        <div class="concepts-container">
+                            <div class="concept-tag concept-blue">
+                                <svg width="20" height="20" viewBox="0 0 24 24" class="icon-spin">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M9 9h6v6H9z" fill="none" stroke="currentColor" stroke-width="2"/>
+                                    <circle cx="12" cy="12" r="1" fill="currentColor"/>
+                                    <path d="M7 7l2 2M17 7l-2 2M7 17l2-2M17 17l-2-2" stroke="currentColor" stroke-width="1"/>
+                                </svg>
+                                <span>Proxmox VE</span>
+                                <div class="tooltip">
+                                    Plataforma de virtualización open-source basada en Debian que combina KVM y LXC con gestión web centralizada.
+                                </div>
+                            </div>
+                            
+                            <div class="concept-tag concept-green">
+                                <svg width="20" height="20" viewBox="0 0 24 24" class="icon-pulse">
+                                    <rect x="2" y="4" width="20" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
+                                    <rect x="6" y="8" width="4" height="8" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                                    <rect x="14" y="8" width="4" height="8" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                                    <circle cx="8" cy="10" r="1" fill="currentColor"/>
+                                    <circle cx="16" cy="10" r="1" fill="currentColor"/>
+                                </svg>
+                                <span>KVM</span>
+                                <div class="tooltip">
+                                    Virtualización completa basada en kernel Linux. Permite ejecutar sistemas operativos completos con aislamiento total.
+                                </div>
+                            </div>
+                            
+                            <div class="concept-tag concept-purple">
+                                <svg width="20" height="20" viewBox="0 0 24 24" class="icon-bounce">
+                                    <rect x="4" y="6" width="16" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M8 10h8M8 14h6" stroke="currentColor" stroke-width="1.5"/>
+                                    <rect x="6" y="8" width="2" height="8" rx="1" fill="currentColor" opacity="0.3"/>
+                                    <rect x="16" y="8" width="2" height="8" rx="1" fill="currentColor" opacity="0.3"/>
+                                </svg>
+                                <span>LXC</span>
+                                <div class="tooltip">
+                                    Contenedores ligeros a nivel de sistema operativo. Comparten kernel pero mantienen aislamiento de procesos y recursos.
+                                </div>
+                            </div>
+                            
+                            <div class="concept-tag concept-orange">
+                                <svg width="20" height="20" viewBox="0 0 24 24" class="icon-rotate">
+                                    <circle cx="6" cy="6" r="3" fill="none" stroke="currentColor" stroke-width="2"/>
+                                    <circle cx="18" cy="6" r="3" fill="none" stroke="currentColor" stroke-width="2"/>
+                                    <circle cx="6" cy="18" r="3" fill="none" stroke="currentColor" stroke-width="2"/>
+                                    <circle cx="18" cy="18" r="3" fill="none" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M9 6h6M9 18h6M6 9v6M18 9v6" stroke="currentColor" stroke-width="2"/>
+                                </svg>
+                                <span>Clustering</span>
+                                <div class="tooltip">
+                                    Agrupación de servidores físicos para gestión centralizada, balanceo de carga y alta disponibilidad automática.
+                                </div>
+                            </div>
+                            
+                            <div class="concept-tag concept-teal">
+                                <svg width="20" height="20" viewBox="0 0 24 24" class="icon-float">
+                                    <rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
+                                    <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M8 8l8 8M16 8l-8 8" stroke="currentColor" stroke-width="1" opacity="0.5"/>
+                                    <circle cx="12" cy="12" r="1" fill="currentColor"/>
+                                </svg>
+                                <span>Almacenamiento Compartido</span>
+                                <div class="tooltip">
+                                    Permite migración en vivo y alta disponibilidad entre nodos. Soporta Ceph, NFS, iSCSI y otros protocolos.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline Item 3: Corosync y Pacemaker (Izquierda) -->
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h2 class="module-title">Corosync y Pacemaker: El Cerebro del Clúster</h2>
+                    
+                    <p class="static-text">
+                        Corosync gestiona la comunicación entre nodos mediante "latidos" (heartbeats). Pacemaker orquesta la conmutación por fallo, evita el split-brain con quórum y fencing (STONITH).
+                    </p>
+                    
+                    <!-- SVG Corosync y Pacemaker -->
+                    <div class="svg-container">
+                        <svg width="500" height="300" viewBox="0 0 500 300">
+                            <!-- Definición de gradientes -->
+                            <defs>
+                                <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#fca5a5;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#ef4444;stop-opacity:1" />
+                                </linearGradient>
+                                
+                                <linearGradient id="brainGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#a78bfa;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+                                </linearGradient>
+                                
+                                <filter id="brainGlow" x="-50%" y="-50%" width="200%" height="200%">
+                                    <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                                    <feMerge> 
+                                        <feMergeNode in="coloredBlur"/>
+                                        <feMergeNode in="SourceGraphic"/>
+                                    </feMerge>
+                                </filter>
+                            </defs>
+                            
+                            <!-- Nodos simplificados -->
+                            <rect x="80" y="100" width="80" height="100" rx="8" ry="8" 
+                                  fill="url(#nodeGradient)" stroke="#2563eb" stroke-width="2" opacity="0.8"/>
+                            <text x="120" y="90" text-anchor="middle" font-size="12" font-weight="600" fill="#2563eb">Nodo 1</text>
+                            
+                            <rect x="340" y="100" width="80" height="100" rx="8" ry="8" 
+                                  fill="url(#nodeGradient)" stroke="#2563eb" stroke-width="2" opacity="0.8"/>
+                            <text x="380" y="90" text-anchor="middle" font-size="12" font-weight="600" fill="#2563eb">Nodo 2</text>
+                            
+                            <!-- Línea de heartbeat (onda de pulso cardiaco) -->
+                            <path d="M 160 150 L 200 150 L 210 130 L 220 170 L 230 130 L 240 150 L 280 150 L 290 130 L 300 170 L 310 130 L 320 150 L 340 150" 
+                                  fill="none" stroke="#60a5fa" stroke-width="3" class="heartbeat-wave"/>
+                            
+                            <!-- Corazón animado -->
+                            <g class="heartbeat-icon" transform="translate(250, 140)">
+                                <path d="M0,5 C0,-5 -10,-10 -15,0 C-20,-10 -30,-5 -30,5 C-30,15 -15,25 0,35 C15,25 30,15 30,5 C30,-5 20,-10 15,0 C10,-10 0,-5 0,5 Z" 
+                                      fill="url(#heartGradient)" stroke="#ef4444" stroke-width="1" 
+                                      transform="scale(0.4)" class="heart-pulse"/>
+                            </g>
+                            
+                            <!-- Cerebro Pacemaker -->
+                            <g class="pacemaker-brain" transform="translate(250, 50)">
+                                <ellipse cx="0" cy="0" rx="40" ry="25" 
+                                         fill="url(#brainGradient)" stroke="#7c3aed" stroke-width="2" 
+                                         filter="url(#brainGlow)" class="brain-glow"/>
+                                
+                                <!-- Líneas de circuito en el cerebro -->
+                                <path d="M -20,-10 Q -10,-15 0,-10 Q 10,-15 20,-10" 
+                                      fill="none" stroke="#c4b5fd" stroke-width="1.5" opacity="0.8"/>
+                                <path d="M -15,0 Q 0,5 15,0" 
+                                      fill="none" stroke="#c4b5fd" stroke-width="1.5" opacity="0.8"/>
+                                <path d="M -20,10 Q -10,15 0,10 Q 10,15 20,10" 
+                                      fill="none" stroke="#c4b5fd" stroke-width="1.5" opacity="0.8"/>
+                                
+                                <text x="0" y="5" text-anchor="middle" font-size="10" font-weight="600" fill="white">Pacemaker</text>
+                            </g>
+                            
+                            <!-- Flechas de control desde el cerebro -->
+                            <g class="control-arrows">
+                                <path d="M 220 70 L 140 120" stroke="#a78bfa" stroke-width="2" 
+                                      marker-end="url(#controlArrow)" class="control-flash"/>
+                                <path d="M 280 70 L 360 120" stroke="#a78bfa" stroke-width="2" 
+                                      marker-end="url(#controlArrow)" class="control-flash"/>
+                                <path d="M 250 75 L 250 110" stroke="#a78bfa" stroke-width="2" 
+                                      marker-end="url(#controlArrow)" class="control-flash"/>
+                                
+                                <!-- IP Virtual -->
+                                <circle cx="250" cy="120" r="15" fill="#fbbf24" stroke="#f59e0b" stroke-width="2"/>
+                                <text x="250" y="125" text-anchor="middle" font-size="8" font-weight="600" fill="white">IP</text>
+                                
+                                <defs>
+                                    <marker id="controlArrow" markerWidth="8" markerHeight="6" 
+                                            refX="7" refY="3" orient="auto">
+                                        <polygon points="0 0, 8 3, 0 6" fill="#a78bfa"/>
+                                    </marker>
+                                </defs>
+                            </g>
+                        </svg>
+                    </div>
+                    
+                    <!-- Conceptos Clave -->
+                    <div class="concepts-section">
+                        <h3 class="concepts-title">Conceptos Clave</h3>
+                        <div class="concepts-container">
+                            <div class="concept-tag concept-blue">
+                                <svg width="20" height="20" viewBox="0 0 24 24" class="icon-pulse">
+                                    <circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24" stroke="currentColor" stroke-width="2"/>
+                                </svg>
+                                <span>Corosync</span>
+                                <div class="tooltip">
+                                    Sistema de mensajería de baja latencia para clústeres. Proporciona comunicación confiable entre nodos del clúster.
+                                </div>
+                            </div>
+                            
+                            <div class="concept-tag concept-red">
+                                <svg width="20" height="20" viewBox="0 0 24 24" class="icon-pulse">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="currentColor"/>
+                                </svg>
+                                <span>Heartbeat</span>
+                                <div class="tooltip">
+                                    Señal periódica que confirma la salud del nodo. Si se pierde, se activa el proceso de failover automático.
+                                </div>
+                            </div>
+                            
+                            <div class="concept-tag concept-orange">
+                                <svg width="20" height="20" viewBox="0 0 24 24" class="icon-glow">
+                                    <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" stroke="currentColor" stroke-width="2" fill="none"/>
+                                    <circle cx="12" cy="17" r="1" fill="currentColor"/>
+                                </svg>
+                                <span>Quórum</span>
+                                <div class="tooltip">
+                                    Mecanismo para decidir qué nodos pueden controlar el clúster. Previene decisiones conflictivas en caso de partición de red.
+                                </div>
+                            </div>
+                            
+                            <div class="concept-tag concept-purple">
+                                <svg width="20" height="20" viewBox="0 0 24 24" class="icon-float">
+                                    <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z" fill="none" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M14.5 6.5a4.5 4.5 0 0 1 0 9 3.5 3.5 0 0 1 0 7 2.5 2.5 0 0 1 0 5" stroke="currentColor" stroke-width="2" fill="none"/>
+                                </svg>
+                                <span>Pacemaker</span>
+                                <div class="tooltip">
+                                    Gestor de recursos de alta disponibilidad que orquesta el failover automático y gestiona servicios críticos.
+                                </div>
+                            </div>
+                            
+                            <div class="concept-tag concept-gray">
+                                <svg width="20" height="20" viewBox="0 0 24 24" class="icon-bounce">
+                                    <rect x="3" y="11" width="18" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
+                                    <circle cx="12" cy="16" r="1" fill="currentColor"/>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="currentColor" stroke-width="2" fill="none"/>
+                                    <path d="M8 16h8" stroke="currentColor" stroke-width="1" opacity="0.5"/>
+                                </svg>
+                                <span>Fencing (STONITH)</span>
+                                <div class="tooltip">
+                                    "Shoot The Other Node In The Head" - Aisla nodos fallidos para proteger la integridad de los datos del clúster.
+                                </div>
+                            </div>
+                            
+                            <div class="concept-tag concept-pink">
+                                <svg width="20" height="20" viewBox="0 0 24 24" class="icon-rotate">
+                                    <path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5" fill="none" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M8.5 8.5L12 12l7-7" stroke="currentColor" stroke-width="2" fill="none"/>
+                                    <circle cx="12" cy="12" r="2" fill="currentColor"/>
+                                </svg>
+                                <span>Split-brain</span>
+                                <div class="tooltip">
+                                    Fallo crítico cuando dos o más nodos actúan simultáneamente como maestros, causando corrupción de datos.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Audio Context for generating subtle hover sounds
+        let audioContext;
+        let isAudioInitialized = false;
+
+        // Initialize audio context on first user interaction
+        function initializeAudio() {
+            if (!isAudioInitialized) {
+                try {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    isAudioInitialized = true;
+                } catch (e) {
+                    console.log('Audio not supported');
+                }
+            }
+        }
+
+        // Generate futuristic hover sound with advanced synthesis
+        function playHoverSound(frequency = 800, duration = 0.25, volume = 0.12) {
+            if (!audioContext || audioContext.state === 'suspended') {
+                return;
+            }
+
+            try {
+                // Create multiple oscillators for rich harmonic content
+                const osc1 = audioContext.createOscillator();
+                const osc2 = audioContext.createOscillator();
+                const osc3 = audioContext.createOscillator();
+                const subOsc = audioContext.createOscillator();
+                
+                // Create audio processing nodes
+                const mainGain = audioContext.createGain();
+                const subGain = audioContext.createGain();
+                const filter1 = audioContext.createBiquadFilter();
+                const filter2 = audioContext.createBiquadFilter();
+                const delay = audioContext.createDelay(0.3);
+                const delayGain = audioContext.createGain();
+                const compressor = audioContext.createDynamicsCompressor();
+                
+                // Connect the audio graph
+                osc1.connect(mainGain);
+                osc2.connect(mainGain);
+                osc3.connect(mainGain);
+                subOsc.connect(subGain);
+                
+                mainGain.connect(filter1);
+                subGain.connect(filter2);
+                filter1.connect(compressor);
+                filter2.connect(compressor);
+                
+                // Add ethereal delay effect
+                filter1.connect(delay);
+                delay.connect(delayGain);
+                delayGain.connect(compressor);
+                
+                compressor.connect(audioContext.destination);
+                
+                // Configure oscillators for futuristic tones
+                osc1.frequency.setValueAtTime(frequency, audioContext.currentTime);
+                osc1.type = 'sawtooth';
+                
+                osc2.frequency.setValueAtTime(frequency * 1.618, audioContext.currentTime); // Golden ratio
+                osc2.type = 'triangle';
+                
+                osc3.frequency.setValueAtTime(frequency * 2.414, audioContext.currentTime); // Silver ratio
+                osc3.type = 'sine';
+                
+                // Sub-bass for depth
+                subOsc.frequency.setValueAtTime(frequency * 0.5, audioContext.currentTime);
+                subOsc.type = 'sine';
+                
+                // Configure filters for sci-fi character
+                filter1.type = 'bandpass';
+                filter1.frequency.setValueAtTime(frequency * 2, audioContext.currentTime);
+                filter1.Q.setValueAtTime(8, audioContext.currentTime);
+                
+                filter2.type = 'lowpass';
+                filter2.frequency.setValueAtTime(frequency * 4, audioContext.currentTime);
+                filter2.Q.setValueAtTime(2, audioContext.currentTime);
+                
+                // Configure delay for space effect
+                delay.delayTime.setValueAtTime(0.08, audioContext.currentTime);
+                delayGain.gain.setValueAtTime(0.3, audioContext.currentTime);
+                
+                // Configure compressor for punch
+                compressor.threshold.setValueAtTime(-24, audioContext.currentTime);
+                compressor.knee.setValueAtTime(30, audioContext.currentTime);
+                compressor.ratio.setValueAtTime(12, audioContext.currentTime);
+                compressor.attack.setValueAtTime(0.003, audioContext.currentTime);
+                compressor.release.setValueAtTime(0.25, audioContext.currentTime);
+                
+                // Futuristic envelope with multiple stages
+                mainGain.gain.setValueAtTime(0, audioContext.currentTime);
+                mainGain.gain.linearRampToValueAtTime(volume * 0.8, audioContext.currentTime + 0.01);
+                mainGain.gain.exponentialRampToValueAtTime(volume, audioContext.currentTime + 0.05);
+                mainGain.gain.linearRampToValueAtTime(volume * 0.6, audioContext.currentTime + duration * 0.3);
+                mainGain.gain.exponentialRampToValueAtTime(volume * 0.2, audioContext.currentTime + duration * 0.7);
+                mainGain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
+                
+                subGain.gain.setValueAtTime(0, audioContext.currentTime);
+                subGain.gain.linearRampToValueAtTime(volume * 0.4, audioContext.currentTime + 0.02);
+                subGain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration * 0.8);
+                
+                // Dynamic frequency sweeps for movement
+                osc1.frequency.exponentialRampToValueAtTime(frequency * 1.2, audioContext.currentTime + duration * 0.3);
+                osc1.frequency.exponentialRampToValueAtTime(frequency * 0.9, audioContext.currentTime + duration);
+                
+                filter1.frequency.exponentialRampToValueAtTime(frequency * 6, audioContext.currentTime + duration * 0.4);
+                filter1.frequency.exponentialRampToValueAtTime(frequency * 1.5, audioContext.currentTime + duration);
+                
+                // Start all oscillators
+                const startTime = audioContext.currentTime;
+                const stopTime = startTime + duration;
+                
+                osc1.start(startTime);
+                osc2.start(startTime);
+                osc3.start(startTime);
+                subOsc.start(startTime);
+                
+                osc1.stop(stopTime);
+                osc2.stop(stopTime);
+                osc3.stop(stopTime);
+                subOsc.stop(stopTime);
+                
+            } catch (e) {
+                console.log('Audio error:', e);
+            }
+        }
+
+        // Generate futuristic click sound
+        function playClickSound() {
+            if (!audioContext || audioContext.state === 'suspended') {
+                return;
+            }
+
+            try {
+                // Create multiple layers for rich click sound
+                const osc1 = audioContext.createOscillator();
+                const osc2 = audioContext.createOscillator();
+                const noiseBuffer = audioContext.createBuffer(1, audioContext.sampleRate * 0.1, audioContext.sampleRate);
+                const noiseSource = audioContext.createBufferSource();
+                
+                // Generate white noise for click transient
+                const noiseData = noiseBuffer.getChannelData(0);
+                for (let i = 0; i < noiseData.length; i++) {
+                    noiseData[i] = (Math.random() * 2 - 1) * 0.1;
+                }
+                noiseSource.buffer = noiseBuffer;
+                
+                // Create processing nodes
+                const mainGain = audioContext.createGain();
+                const noiseGain = audioContext.createGain();
+                const filter1 = audioContext.createBiquadFilter();
+                const filter2 = audioContext.createBiquadFilter();
+                const reverb = audioContext.createConvolver();
+                const reverbGain = audioContext.createGain();
+                
+                // Create impulse response for reverb
+                const impulseLength = audioContext.sampleRate * 0.5;
+                const impulse = audioContext.createBuffer(2, impulseLength, audioContext.sampleRate);
+                for (let channel = 0; channel < 2; channel++) {
+                    const channelData = impulse.getChannelData(channel);
+                    for (let i = 0; i < impulseLength; i++) {
+                        channelData[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / impulseLength, 2);
+                    }
+                }
+                reverb.buffer = impulse;
+                
+                // Connect audio graph
+                osc1.connect(mainGain);
+                osc2.connect(mainGain);
+                noiseSource.connect(noiseGain);
+                
+                mainGain.connect(filter1);
+                noiseGain.connect(filter2);
+                filter1.connect(audioContext.destination);
+                filter2.connect(audioContext.destination);
+                
+                // Add subtle reverb
+                filter1.connect(reverb);
+                reverb.connect(reverbGain);
+                reverbGain.connect(audioContext.destination);
+                
+                // Configure oscillators for digital click
+                osc1.frequency.setValueAtTime(2400, audioContext.currentTime);
+                osc1.frequency.exponentialRampToValueAtTime(1200, audioContext.currentTime + 0.02);
+                osc1.frequency.exponentialRampToValueAtTime(600, audioContext.currentTime + 0.08);
+                osc1.type = 'square';
+                
+                osc2.frequency.setValueAtTime(3600, audioContext.currentTime);
+                osc2.frequency.exponentialRampToValueAtTime(1800, audioContext.currentTime + 0.015);
+                osc2.type = 'sawtooth';
+                
+                // Configure filters
+                filter1.type = 'highpass';
+                filter1.frequency.setValueAtTime(800, audioContext.currentTime);
+                filter1.Q.setValueAtTime(2, audioContext.currentTime);
+                
+                filter2.type = 'bandpass';
+                filter2.frequency.setValueAtTime(4000, audioContext.currentTime);
+                filter2.frequency.exponentialRampToValueAtTime(2000, audioContext.currentTime + 0.05);
+                filter2.Q.setValueAtTime(10, audioContext.currentTime);
+                
+                // Configure gains with sharp attack
+                mainGain.gain.setValueAtTime(0.15, audioContext.currentTime);
+                mainGain.gain.exponentialRampToValueAtTime(0.05, audioContext.currentTime + 0.02);
+                mainGain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.08);
+                
+                noiseGain.gain.setValueAtTime(0.3, audioContext.currentTime);
+                noiseGain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.01);
+                
+                reverbGain.gain.setValueAtTime(0.02, audioContext.currentTime);
+                
+                // Start and stop
+                const startTime = audioContext.currentTime;
+                const stopTime = startTime + 0.1;
+                
+                osc1.start(startTime);
+                osc2.start(startTime);
+                noiseSource.start(startTime);
+                
+                osc1.stop(stopTime);
+                osc2.stop(stopTime);
+                noiseSource.stop(startTime + 0.01);
+                
+            } catch (e) {
+                console.log('Click audio error:', e);
+            }
+        }
+
+        // Enhanced audio initialization and interaction
+        document.addEventListener('DOMContentLoaded', function() {
+            const conceptTags = document.querySelectorAll('.concept-tag');
+            
+            // Initialize audio on first interaction
+            function initAudioOnInteraction() {
+                initializeAudio();
+                if (audioContext && audioContext.state === 'suspended') {
+                    audioContext.resume().then(() => {
+                        console.log('Audio context resumed');
+                    });
+                }
+            }
+            
+            // Multiple ways to initialize audio
+            document.addEventListener('click', initAudioOnInteraction, { once: true });
+            document.addEventListener('touchstart', initAudioOnInteraction, { once: true });
+            document.addEventListener('keydown', initAudioOnInteraction, { once: true });
+            
+            // Add enhanced interactions to concept tags
+            conceptTags.forEach((tag, index) => {
+                // Different frequencies for different colors/types - optimized for futuristic sound
+                const frequencies = [
+                    440,  // Blue - harmonic fundamental
+                    523,  // Green - C5 note
+                    659,  // Purple - E5 note
+                    784,  // Orange - G5 note
+                    880,  // Teal - A5 note
+                    1047, // Red - C6 note
+                    587,  // Gray - D5 note
+                    698,  // Pink - F5 note
+                    1175  // Additional - D6 note
+                ];
+                const frequency = frequencies[index % frequencies.length];
+                
+                // Hover sound
+                tag.addEventListener('mouseenter', function() {
+                    initAudioOnInteraction();
+                    setTimeout(() => {
+                        playHoverSound(frequency, 0.15, 0.08);
+                    }, 10);
+                });
+                
+                // Click sound
+                tag.addEventListener('click', function() {
+                    initAudioOnInteraction();
+                    setTimeout(() => {
+                        playClickSound();
+                    }, 10);
+                });
+                
+                // Touch support for mobile
+                tag.addEventListener('touchstart', function(e) {
+                    initAudioOnInteraction();
+                    setTimeout(() => {
+                        playHoverSound(frequency, 0.12, 0.06);
+                    }, 10);
+                }, { passive: true });
+            });
+            
+            // Add audio feedback to timeline dots
+            const timelineDots = document.querySelectorAll('.timeline-dot');
+            timelineDots.forEach((dot, index) => {
+                dot.addEventListener('click', function() {
+                    initAudioOnInteraction();
+                    setTimeout(() => {
+                        playHoverSound(400 + (index * 200), 0.2, 0.1);
+                    }, 10);
+                });
+            });
+            
+            // Debug audio state
+            setTimeout(() => {
+                if (audioContext) {
+                    console.log('Audio context state:', audioContext.state);
+                }
+            }, 1000);
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'967ee855068dca13',t:'MTc1Mzk4MzkwNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
